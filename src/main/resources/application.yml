@@ -1,0 +1,100 @@
+spring:
+  application:
+    name: store-intelligence
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/store_intelligence?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    username: root
+    password: Santanu@2026
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 15
+      minimum-idle: 5
+      idle-timeout: 300000
+      pool-name: StoreIntelligencePool
+      auto-commit: true
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+        default_batch_fetch_size: 50
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: false
+    locations: classpath:db/migration
+    validate-on-migrate: false
+    out-of-order: false
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      fail-on-empty-beans: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+    time-zone: UTC
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    display-request-duration: true
+    tags-sorter: alpha
+
+# ── Application-level configuration ──────────────────────────────────────────
+app:
+  store:
+    default-id: STORE_BLR_002
+
+  batch:
+    max-ingest-size: 500            # max events per POST /events/ingest
+
+  conversion:
+    billing-window-minutes: 5       # how far back before POS tx to correlate visitors
+    billing-zone-keywords:          # zone IDs containing any of these are billing zones
+      - BILLING
+      - CHECKOUT
+      - CASHIER
+      - CASH
+      - COUNTER
+
+  anomaly:
+    queue-spike-threshold: 5        # queue_depth above this → BILLING_QUEUE_SPIKE (CRITICAL)
+    abandonment-warn-threshold: 0.3 # abandonment rate above this → WARN
+    conversion-drop-factor: 0.70    # today rate < 7-day-avg × factor → CONVERSION_DROP
+    dead-zone-minutes: 30           # no ZONE_ENTER in N min → DEAD_ZONE
+    stale-feed-minutes: 10          # no events from store in N min → STALE_FEED
+
+logging:
+  level:
+    com.purplle: DEBUG
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

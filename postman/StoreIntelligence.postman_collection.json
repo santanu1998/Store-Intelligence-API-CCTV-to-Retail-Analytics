@@ -1,0 +1,158 @@
+{
+  "info": {
+    "name": "Store Intelligence API",
+    "description": "Purplle Tech Challenge — Store Intelligence API\nAll endpoints for event ingestion, metrics, funnel, heatmap, anomalies and health.\n\nBase URL: http://localhost:8080\nSwagger UI: http://localhost:8080/swagger-ui.html",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "store-intel-collection-2026"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8080" },
+    { "key": "store_id", "value": "STORE_BLR_002" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /health",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/health", "host": ["{{base_url}}"], "path": ["health"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Event Ingestion",
+      "item": [
+        {
+          "name": "POST /events/ingest — ENTRY event",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/events/ingest", "host": ["{{base_url}}"], "path": ["events","ingest"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"events\": [\n    {\n      \"event_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n      \"store_id\": \"STORE_BLR_002\",\n      \"camera_id\": \"CAM_ENTRY_01\",\n      \"visitor_id\": \"VIS_c8a2f1\",\n      \"event_type\": \"ENTRY\",\n      \"timestamp\": \"2026-04-10T09:00:00Z\",\n      \"zone_id\": null,\n      \"dwell_ms\": 0,\n      \"is_staff\": false,\n      \"confidence\": 0.95,\n      \"metadata\": {\n        \"queue_depth\": null,\n        \"sku_zone\": null,\n        \"session_seq\": 1\n      }\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "POST /events/ingest — Full batch (ENTRY + ZONE_ENTER + ZONE_DWELL + BILLING_QUEUE_JOIN + EXIT)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/events/ingest", "host": ["{{base_url}}"], "path": ["events","ingest"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"events\": [\n    {\n      \"event_id\": \"550e8400-e29b-41d4-a716-446655440010\",\n      \"store_id\": \"STORE_BLR_002\",\n      \"camera_id\": \"CAM_ENTRY_01\",\n      \"visitor_id\": \"VIS_abc123\",\n      \"event_type\": \"ENTRY\",\n      \"timestamp\": \"2026-04-10T10:00:00Z\",\n      \"dwell_ms\": 0,\n      \"is_staff\": false,\n      \"confidence\": 0.93,\n      \"metadata\": { \"session_seq\": 1 }\n    },\n    {\n      \"event_id\": \"550e8400-e29b-41d4-a716-446655440011\",\n      \"store_id\": \"STORE_BLR_002\",\n      \"camera_id\": \"CAM_3\",\n      \"visitor_id\": \"VIS_abc123\",\n      \"event_type\": \"ZONE_ENTER\",\n      \"timestamp\": \"2026-04-10T10:02:00Z\",\n      \"zone_id\": \"SKINCARE\",\n      \"dwell_ms\": 0,\n      \"is_staff\": false,\n      \"confidence\": 0.91,\n      \"metadata\": { \"sku_zone\": \"MOISTURISER\", \"session_seq\": 2 }\n    },\n    {\n      \"event_id\": \"550e8400-e29b-41d4-a716-446655440012\",\n      \"store_id\": \"STORE_BLR_002\",\n      \"camera_id\": \"CAM_3\",\n      \"visitor_id\": \"VIS_abc123\",\n      \"event_type\": \"ZONE_DWELL\",\n      \"timestamp\": \"2026-04-10T10:02:45Z\",\n      \"zone_id\": \"SKINCARE\",\n      \"dwell_ms\": 45000,\n      \"is_staff\": false,\n      \"confidence\": 0.88,\n      \"metadata\": { \"sku_zone\": \"MOISTURISER\", \"session_seq\": 3 }\n    },\n    {\n      \"event_id\": \"550e8400-e29b-41d4-a716-446655440013\",\n      \"store_id\": \"STORE_BLR_002\",\n      \"camera_id\": \"CAM_3\",\n      \"visitor_id\": \"VIS_abc123\",\n      \"event_type\": \"BILLING_QUEUE_JOIN\",\n      \"timestamp\": \"2026-04-10T10:15:00Z\",\n      \"zone_id\": \"BILLING\",\n      \"dwell_ms\": 0,\n      \"is_staff\": false,\n      \"confidence\": 0.97,\n      \"metadata\": { \"queue_depth\": 3, \"session_seq\": 4 }\n    },\n    {\n      \"event_id\": \"550e8400-e29b-41d4-a716-446655440014\",\n      \"store_id\": \"STORE_BLR_002\",\n      \"camera_id\": \"CAM_ENTRY_01\",\n      \"visitor_id\": \"VIS_abc123\",\n      \"event_type\": \"EXIT\",\n      \"timestamp\": \"2026-04-10T10:22:00Z\",\n      \"dwell_ms\": 0,\n      \"is_staff\": false,\n      \"confidence\": 0.96,\n      \"metadata\": { \"session_seq\": 5 }\n    },\n    {\n      \"event_id\": \"550e8400-e29b-41d4-a716-446655440015\",\n      \"store_id\": \"STORE_BLR_002\",\n      \"camera_id\": \"CAM_ENTRY_01\",\n      \"visitor_id\": \"VIS_staff01\",\n      \"event_type\": \"ENTRY\",\n      \"timestamp\": \"2026-04-10T10:01:00Z\",\n      \"dwell_ms\": 0,\n      \"is_staff\": true,\n      \"confidence\": 0.98,\n      \"metadata\": { \"session_seq\": 1 }\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "POST /events/ingest — REENTRY event",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/events/ingest", "host": ["{{base_url}}"], "path": ["events","ingest"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"events\": [\n    {\n      \"event_id\": \"550e8400-e29b-41d4-a716-446655440020\",\n      \"store_id\": \"STORE_BLR_002\",\n      \"camera_id\": \"CAM_ENTRY_01\",\n      \"visitor_id\": \"VIS_abc123\",\n      \"event_type\": \"REENTRY\",\n      \"timestamp\": \"2026-04-10T10:35:00Z\",\n      \"dwell_ms\": 0,\n      \"is_staff\": false,\n      \"confidence\": 0.82,\n      \"metadata\": { \"session_seq\": 1 }\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "POST /events/ingest — Duplicate (same event_id, should be skipped)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/events/ingest", "host": ["{{base_url}}"], "path": ["events","ingest"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"events\": [\n    {\n      \"event_id\": \"550e8400-e29b-41d4-a716-446655440010\",\n      \"store_id\": \"STORE_BLR_002\",\n      \"camera_id\": \"CAM_ENTRY_01\",\n      \"visitor_id\": \"VIS_abc123\",\n      \"event_type\": \"ENTRY\",\n      \"timestamp\": \"2026-04-10T10:00:00Z\",\n      \"dwell_ms\": 0,\n      \"is_staff\": false,\n      \"confidence\": 0.93,\n      \"metadata\": { \"session_seq\": 1 }\n    }\n  ]\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "POS Transactions",
+      "item": [
+        {
+          "name": "POST /pos/ingest — JSON batch",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/pos/ingest", "host": ["{{base_url}}"], "path": ["pos","ingest"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactions\": [\n    {\n      \"store_id\": \"STORE_BLR_002\",\n      \"transaction_id\": \"TXN_00441\",\n      \"timestamp\": \"2026-04-10T10:20:00Z\",\n      \"basket_value_inr\": 1240.00,\n      \"invoice_number\": \"INV-20260410-001\",\n      \"invoice_type\": \"SALE\"\n    },\n    {\n      \"store_id\": \"STORE_BLR_002\",\n      \"transaction_id\": \"TXN_00442\",\n      \"timestamp\": \"2026-04-10T10:45:00Z\",\n      \"basket_value_inr\": 680.00\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "POST /pos/import-csv — File upload",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/pos/import-csv?storeId=ST1008", "host": ["{{base_url}}"], "path": ["pos","import-csv"], "query": [{"key":"storeId","value":"ST1008"}] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [{ "key": "file", "type": "file", "description": "Brigade Bangalore CSV" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Store Analytics",
+      "item": [
+        {
+          "name": "GET /stores — List all stores",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/stores", "host": ["{{base_url}}"], "path": ["stores"] }
+          }
+        },
+        {
+          "name": "GET /stores/{id}/metrics — Today's metrics",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/stores/{{store_id}}/metrics", "host": ["{{base_url}}"], "path": ["stores","{{store_id}}","metrics"] }
+          }
+        },
+        {
+          "name": "GET /stores/{id}/metrics — Custom time window",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/stores/{{store_id}}/metrics?start=2026-04-10T09:00:00&end=2026-04-10T18:00:00",
+              "host": ["{{base_url}}"], "path": ["stores","{{store_id}}","metrics"],
+              "query": [{"key":"start","value":"2026-04-10T09:00:00"},{"key":"end","value":"2026-04-10T18:00:00"}]
+            }
+          }
+        },
+        {
+          "name": "GET /stores/{id}/funnel — Conversion funnel",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/stores/{{store_id}}/funnel", "host": ["{{base_url}}"], "path": ["stores","{{store_id}}","funnel"] }
+          }
+        },
+        {
+          "name": "GET /stores/{id}/heatmap — Zone heatmap",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/stores/{{store_id}}/heatmap", "host": ["{{base_url}}"], "path": ["stores","{{store_id}}","heatmap"] }
+          }
+        },
+        {
+          "name": "GET /stores/{id}/anomalies — Active anomalies",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/stores/{{store_id}}/anomalies", "host": ["{{base_url}}"], "path": ["stores","{{store_id}}","anomalies"] }
+          }
+        }
+      ]
+    }
+  ]
+}
