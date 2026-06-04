@@ -1,4 +1,4 @@
-# Store Intelligence API — Purplle Tech Challenge
+<img width="1251" height="254" alt="image" src="https://github.com/user-attachments/assets/41b21e67-06b5-4120-b430-fc12de477b15" /># Store Intelligence API — Purplle Tech Challenge
 
 Real-time retail analytics API built on **Java 21 + Spring Boot 3.5 + MySQL 8**.  
 Ingests CCTV detection events and POS transactions → delivers live store metrics,
@@ -10,7 +10,7 @@ conversion funnel, zone heatmap, and anomaly alerts.
 
 ```bash
 # 1. Clone
-git clone <repo-url> && cd store-intelligence
+git clone https://github.com/santanu1998/Store-Intelligence-API-CCTV-to-Retail-Analytics/ && cd store-intelligence
 
 # 2. Generate Gradle wrapper (only needed once)
 gradle wrapper --gradle-version 8.13
